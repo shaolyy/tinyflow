@@ -1,8 +1,8 @@
 """auxiliary utility to get the dataset for demo"""
 import numpy as np
 from collections import namedtuple
-from sklearn.datasets import fetch_mldata
-import cPickle
+from sklearn.datasets import fetch_openml
+import pickle as pickle
 import sys
 import os
 from subprocess import call
@@ -26,7 +26,7 @@ class ArrayPacker(object):
 MNISTData = namedtuple("MNISTData", ["train", "test"])
 
 def get_mnist(flatten=False, onehot=False):
-    mnist = fetch_mldata('MNIST original')
+    mnist = fetch_openml('mnist_784')
     np.random.seed(1234) # set seed for deterministic ordering
     p = np.random.permutation(mnist.data.shape[0])
     X = mnist.data[p]
@@ -53,9 +53,9 @@ CIFAR10Data = namedtuple("CIFAR10Data", ["train", "test"])
 def load_batch(fpath, label_key='labels'):
     f = open(fpath, 'rb')
     if sys.version_info < (3,):
-        d = cPickle.load(f)
+        d = pickle.load(f)
     else:
-        d = cPickle.load(f, encoding="bytes")
+        d = pickle.load(f, encoding="bytes")
         # decode utf8
         for k, v in d.items():
             del(d[k])
